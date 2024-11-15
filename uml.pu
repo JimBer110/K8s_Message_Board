@@ -1,0 +1,79 @@
+@startuml overview
+
+package "Kubernetes" as K8s {
+  database db
+  rectangle backend_1
+  label "..." as mult_back
+  rectangle backend_n
+  rectangle frontend_1
+  label "..." as mult_front
+  rectangle frontend_n
+
+  db <-- backend_1
+  db <-- mult_back
+  db <-- backend_n
+
+  interface "What" as backend_interface
+
+  backend_1 <-- backend_interface
+  mult_back <-- backend_interface
+  backend_n <-- backend_interface
+
+  backend_interface <-- frontend_1
+  backend_interface <-- mult_front
+  backend_interface <-- frontend_n
+
+  interface NodePort
+
+  frontend_1 <-- NodePort
+  mult_front <-- NodePort
+  frontend_n <-- NodePort
+}
+
+actor "Browser" as browser
+
+NodePort <-- browser
+
+@enduml
+
+@startuml overview_alternative
+
+package "Kubernetes" as K8s {
+  database db
+  rectangle backend_1
+  label "..." as mult_back
+  rectangle backend_n
+  rectangle frontend_1
+  label "..." as mult_front
+  rectangle frontend_n
+
+  db <-- backend_1
+  db <-- mult_back
+  db <-- backend_n
+
+  interface "What" as backend_interface
+
+  backend_1 <-- backend_interface
+  mult_back <-- backend_interface
+  backend_n <-- backend_interface
+
+  backend_interface <-- frontend_1
+  backend_interface <-- mult_front
+  backend_interface <-- frontend_n
+
+  interface Ingress
+
+  frontend_1 <-- Ingress
+  mult_front <-- Ingress
+  frontend_n <-- Ingress
+
+  backend_1 <-- Ingress
+  mult_back <-- Ingress
+  backend_n <-- Ingress
+}
+
+actor "Browser" as browser
+
+Ingress <-- browser
+
+@enduml
