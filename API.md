@@ -36,16 +36,22 @@ These should all then redirect back to `https://frontend`
 
 ## Backend
 
+### List all previous messages
+
+```
+https://backend/list
+```
+
 ### Add a message
 
 ```
-https://backend/put
+https://backend/create
 ```
 
 ### Modify a message
 
 ```
-https://backend/modify
+https://backend/update
 ```
 
 ### Delete a message
