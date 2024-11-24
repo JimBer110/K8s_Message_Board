@@ -1,0 +1,32 @@
+# Deployment for Message Board
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-board-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message-board-backend
+  template:
+    metadata:
+      labels:
+        app: message-board-backend
+    spec:
+      containers:
+      - name: message-board-backend
+        image: <insert-link-here>
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DB_NAME
+          value: mydatabase
+        - name: DB_USER
+          value: myuser
+        - name: DB_PASSWORD
+          value: mypassword
+        - name: DB_HOST
+          value: postgres
+        - name: DB_PORT
+          value: "5432"
+

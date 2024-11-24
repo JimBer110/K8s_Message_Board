@@ -1,0 +1,13 @@
+# Service for Message Board
+apiVersion: v1
+kind: Service
+metadata:
+  name: message-board-backend
+spec:
+  selector:
+    app: message-board-backend
+  ports:
+  - name: message-board-backend
+    port: 5000
+    targetPort: 5000
+  type: ClusterIP
