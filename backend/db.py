@@ -5,17 +5,29 @@ import os
 class DB_Handler:
 
     def __init__(self):
-        self.conn = psycopg2.connect(
-            dbname=os.environ['DB_NAME'],
-            user=os.environ['DB_USER'],
-            password=os.environ['DB_PASSWORD'],
-            host=os.environ['DB_HOST'],
-            port=os.environ['DB_PORT']
-        )
-        self.create_table()
+        self.conn = None
+        self.make_connection()
 
     def __del__(self):
-        self.conn.close()
+        if self.conn:
+            self.conn.close()
+
+    def make_connection(self):
+        if not self.conn:
+            try:
+                self.conn = psycopg2.connect(
+                    dbname=os.environ['DB_NAME'],
+                    user=os.environ['DB_USER'],
+                    password=os.environ['DB_PASSWORD'],
+                    host=os.environ['DB_HOST'],
+                    port=os.environ['DB_PORT']
+                )
+                if self.conn:
+                    self.create_table()
+                    return True
+            except Exception:
+                return False
+        return True
 
     def create_table(self):
         """
@@ -43,6 +55,7 @@ class DB_Handler:
         Returns:
             int: The ID of the newly added message.
         """
+        self.make_connection()
         cur = self.conn.cursor()
         cur.execute(
             "INSERT INTO messages (message, username) VALUES (%s, %s) RETURNING id", (message, username))
@@ -62,6 +75,7 @@ class DB_Handler:
         Returns:
             bool: True if the message was modified successfully, False otherwise.
         """
+        self.make_connection()
         cur = self.conn.cursor()
         cur.execute(
             "UPDATE messages SET message = %s WHERE id = %s", (message, id))
@@ -80,6 +94,7 @@ class DB_Handler:
         Returns:
             bool: True if the message was deleted successfully, False otherwise.
         """
+        self.make_connection()
         cur = self.conn.cursor()
         cur.execute("DELETE FROM messages WHERE id = %s", (id,))
         self.conn.commit()
