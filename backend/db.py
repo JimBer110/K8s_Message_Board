@@ -101,3 +101,17 @@ class DB_Handler:
         status = cur.rowcount == 1
         cur.close()
         return status
+
+    def get_all_messages(self):
+        """
+        Retrieves all messages from the database.
+
+        Returns:
+            list: A list of tuples containing the message ID, message text, and username.
+        """
+        self.make_connection()
+        cur = self.conn.cursor()
+        cur.execute("SELECT * FROM messages")
+        messages = cur.fetchall()
+        cur.close()
+        return messages
