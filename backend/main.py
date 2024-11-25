@@ -55,7 +55,7 @@ def get_messages():
         messages = db.get_all_messages()
 
         dict_messages = []
-        for message in messages[::-1]:
+        for message in messages:
             tmp = {}
             tmp["message_id"] = message[0]
             tmp["message"] = message[1]
