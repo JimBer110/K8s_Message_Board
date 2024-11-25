@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: message-board-backend
-        image: docker.io/jimber110/message-board-backend:latest
+        image: docker.io/jimber110/message_board_backend:latest
         ports:
         - containerPort: 5000
         env:
