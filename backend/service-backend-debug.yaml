@@ -1,0 +1,14 @@
+# Service for Message Board
+apiVersion: v1
+kind: Service
+metadata:
+  name: message-board-backend
+spec:
+  selector:
+    app: message-board-backend
+  ports:
+  - targetPort: 5000
+    nodePort: 30080
+    protocol: TCP
+  type: NodePort
+
