@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: message_board_frontend
+  name: message-board-frontend
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: message_board_frontend
+      app: message-board-frontend
   template:
     metadata:
       labels:
-        app: message_board_frontend
+        app: message-board-frontend
     spec:
       containers:
-      - name: message_board_frontend
+      - name: message-board-frontend
         image: docker.io/xmadking/message_board_frontend:latest
         ports:
         - containerPort: 5000
