@@ -1,5 +1,6 @@
 import psycopg2
 import os
+import time
 
 
 class DB_Handler:
@@ -38,7 +39,8 @@ class DB_Handler:
             CREATE TABLE IF NOT EXISTS messages (
                 id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                 message TEXT NOT NULL,
-                username TEXT NOT NULL
+                username TEXT NOT NULL,
+                timestamp BIGINT NOT NULL
             );
         """)
         cur.close()
@@ -55,10 +57,11 @@ class DB_Handler:
         Returns:
             int: The ID of the newly added message.
         """
+        timestamp = int(time.time())
         self.make_connection()
         cur = self.conn.cursor()
         cur.execute(
-            "INSERT INTO messages (message, username) VALUES (%s, %s) RETURNING id", (message, username))
+            "INSERT INTO messages (message, username, timestamp) VALUES (%s, %s, %s) RETURNING id", (message, username, timestamp))
         self.conn.commit()
         id = cur.fetchone()[0]
         cur.close()
@@ -107,11 +110,28 @@ class DB_Handler:
         Retrieves all messages from the database.
 
         Returns:
-            list: A list of tuples containing the message ID, message text, and username.
+            list: A list of tuples containing the message ID, message text, username, and timestamp.
         """
         self.make_connection()
         cur = self.conn.cursor()
-        cur.execute("SELECT * FROM messages")
+        cur.execute("SELECT * FROM messages ORDER BY timestamp DESC")
         messages = cur.fetchall()
         cur.close()
         return messages
+
+    def get_message(self, id):
+        """
+        Retrieves a message from the database by its ID.
+
+        Args:
+            id (int): The ID of the message to be retrieved.
+
+        Returns:
+            tuple: A tuple containing the message ID, message text, username, and timestamp.
+        """
+        self.make_connection()
+        cur = self.conn.cursor()
+        cur.execute("SELECT * FROM messages WHERE id = %s", (id,))
+        message = cur.fetchone()
+        cur.close()
+        return message
