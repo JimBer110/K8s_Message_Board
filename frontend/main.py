@@ -1,12 +1,20 @@
 from flask import Flask, request, render_template, url_for, redirect
-from message import Message
+import requests
+import json
+import os
+import datetime
 
 app = Flask(__name__)
+BACKENDURL = os.environ['BACKEND_URL']
     
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    url = BACKENDURL + "/list"
+    req = requests.get(url)
+    msg_list = json.loads(req.text)
+
+    return render_template('index.html', msg_list=msg_list)
 
 @app.route('/post_message', methods=['POST', 'GET'])
 def post_message():
@@ -14,9 +22,13 @@ def post_message():
         username = request.form.get('usr', default='Anon')
         content = request.form.get('msg', default='')
 
-        msg : Message = Message(0, usrname=username, msg=content)
-
-        print(msg.to_json())
+        data = {
+            "username":username,
+            "message":content
+            }
+        
+        url =  BACKENDURL + "/create"
+        requests.post(url, data)
         
         return redirect(url_for('index')) #for now I route to this
                                           #since I am unsure what to do
@@ -26,8 +38,16 @@ def post_message():
 @app.route('/modify_message', methods=['POST', 'GET'])
 def modify_message():
     if request.method == 'POST':
-        msg_id = request.form.get('msg_id')
-        msg = request.form.get('msg', default='')
+        msg_id = request.form.get('msg_id', type=int)
+        content = request.form.get('msg', default='')
+
+        data = {
+            "message_id" : msg_id,
+            "message" : content
+        }
+
+        url =  BACKENDURL + "/update"
+        requests.post(url, data)
 
         return redirect(url_for('index'))
     else:
@@ -37,6 +57,13 @@ def modify_message():
 def delete_message():
     if request.method == 'POST':
         msg_id = request.form.get('msg_id')
+
+        data = {
+            "message_id" : msg_id
+        }
+
+        url =  BACKENDURL + "/delete"
+        requests.post(url, data)
 
         return redirect(url_for('index'))
     else:

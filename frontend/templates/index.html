@@ -10,3 +10,13 @@
     <li><a href="/delete_message">DELETE MESSAGE</a></li>
 </ul>
 {%endblock%}
+
+{%block msgs%}
+
+{%for msg in msg_list%}
+    <p>Post Owner: {{msg['username']}} | Message Content: {{msg['message']}} | Sent at: {{msg['timestamp']}} | ID: {{msg['message_id']}}</p>
+{%endfor%}
+
+{%endblock%}
+
+
