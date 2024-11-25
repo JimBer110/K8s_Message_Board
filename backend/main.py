@@ -53,6 +53,16 @@ def delete_message():
 def get_messages():
     try:
         messages = db.get_all_messages()
-        return jsonify(messages), 200
+
+        dict_messages = []
+        for message in messages[::-1]:
+            tmp = {}
+            tmp["message_id"] = message[0]
+            tmp["message"] = message[1]
+            tmp["username"] = message[2]
+            tmp["timestamp"] = message[3]
+            dict_messages.append(tmp)
+
+        return jsonify(dict_messages), 200
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
