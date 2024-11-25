@@ -47,3 +47,12 @@ def delete_message():
         return jsonify({"success": success}), 200
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
+
+
+@backend.route("/list", methods=["GET"])
+def get_messages():
+    try:
+        messages = db.get_all_messages()
+        return jsonify(messages), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
